@@ -43,6 +43,7 @@ def load_image(name, opaque, color):
 # This sprite acts as the ground for the falling lava, used to check collisions
 class floor_rock(pygame.sprite.Sprite):
 
+    #creator 
     def __init__(self, color, width, height):
 
         # Call the parent class (Sprite) constructor
@@ -59,24 +60,27 @@ class floor_rock(pygame.sprite.Sprite):
 # falling rocks sprite
 class falling_rock(pygame.sprite.Sprite):
 
+    # creator
     def __init__(self, width, height, speed):
 
         # Call the parent class (Sprite) constructor
         super().__init__()
 
+        # randomizes the height and width of the object
         self.randomNumber = random.randrange(-2, 15)
         width += self.randomNumber * 3
         height += self.randomNumber * 3
 
-
+        # allows the color of the rocks to be changed
         self.flip = 1
         self.color = [255, random.randint(45, 200), 0]
 
+        # Create an image of the block, and fill it with a color.
         self.image = pygame.Surface([width, height])
         self.image.fill(self.color)
 
-        self.speed = speed
-        self.speed += self.randomNumber
+        # randomizes the speed of the rocks
+        self.speed = speed + self.randomNumber
 
         # Fetch the rectangle object that has the dimensions of the image
         # image.
@@ -84,6 +88,7 @@ class falling_rock(pygame.sprite.Sprite):
         # of rect.x and rect.y
         self.rect = self.image.get_rect()
 
+    # subprogram to update any changes in the rocks position or color
     def update(self):
 
         self.rect.y += self.speed
@@ -96,25 +101,11 @@ class falling_rock(pygame.sprite.Sprite):
         self.color[1] += self.flip
         self.image.fill(self.color)
     
-        
 
-
-class floor_lava(pygame.sprite.Sprite):
-
-    def __init__(self, color, width, height):
-
-        super().__init__()
-
-        self.image = pygame.Surface([width, height])
-        self.image.fill(color)
-
-
-        self.rect = self.image.get_rect()
-
-
-
+# player sprite
 class player(pygame.sprite.Sprite):
 
+    # creator 
     def __init__(self, color, width, height, speed):
 
         super().__init__()
@@ -129,8 +120,7 @@ class player(pygame.sprite.Sprite):
         self.speed1 = 10
         self.speed2 = 10
 
-    #def update(self):
-
+    # subprogram 
     def collision(self):
 
         if (self.rect.y > screen.get_height() - 80):
@@ -142,6 +132,7 @@ class player(pygame.sprite.Sprite):
         elif (self.rect.x <= 5):
             self.speed1 = 0
             self.rect.x = 5
+
 
     def gravity(self):
 
@@ -251,21 +242,6 @@ while not done:
             done = True
     #     if (event.type == pygame.KEYDOWN):
 
-    #         #player one controls
-    #         if (event.key == pygame.K_w):
-    #             player1.rect.y -= player1.speed
-
-    #         if (event.key == pygame.K_s):
-    #             player1.rect.y += player1.speed
-
-    #         if (event.key == pygame.K_a):
-    #             player1.rect.x -= player1.speed
-
-    #         if (event.key == pygame.K_d):
-    #             player1.rect.x += player1.speed
-
-    # # Clear the screen
-
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_a]:
@@ -274,7 +250,6 @@ while not done:
         player1.rect.x += player1.speed
 
     if not (jump):
-
         if keys[pygame.K_w]:
             jump = True
     else:
