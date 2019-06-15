@@ -146,13 +146,19 @@ class player(pygame.sprite.Sprite):
             self.rect.y = 5
 
 
-class life(pygame.sprite.Sprite):
+# class health_bar(pygame.sprite.Sprite):
 
-    def __init__(self):
+#     def __init__(self):
 
-        super().__init__()
-
-        self.image = oof
+#         super().__init__()
+#         self.width = 48
+#         self.height = 148
+#         self.color = [255, 0, 0]
+#         #load_iamge("health_bar.png", False, WHITE)
+#         self.image = pygame.Surface([self.width, self.height])
+#         self.image.fill(self.color)
+        
+#         self.rect = self.image.get_rect()
 
 
 # Initialize Pygame
@@ -181,6 +187,19 @@ floor.rect.y = screen.get_height() + 100
 all_sprites_list.add(floor)
 
 
+
+
+
+# health = health_bar()
+# health.rect.x = 1435
+# health.rect.y = 20
+
+# healthG = pygame.sprite.Group()
+# healthG.add(health)
+
+
+
+
 rock_speed = 5
 
 # subprogram which creates a rock when called
@@ -197,10 +216,15 @@ def createRock(speed):
 # creates the player sprite
 player1 = player(R_1, 40, 60, 14)
 player1.rect.x = 750
-player1.rect.y = 10
+player1.rect.y = 800
 
 player_list.add(player1)
 all_sprites_list.add(player1)
+
+
+
+
+
 
 
 # Loop until the user clicks the close button.
@@ -225,7 +249,7 @@ initial_rock = True
 colorFlip = 1
 
 
-graphics = 2
+graphics = 1
 
 if (graphics == 1):
     background_image = load_image("background1.png", True, WHITE)
@@ -237,6 +261,12 @@ elif (graphics == 2):
     background_image = pygame.transform.scale(background_image, (1500, 1000))
 
 
+
+health = -144
+healthColor = [0, 255, 0]
+healthChange = 5
+healthColorChange = 10
+health_image = load_image("health_bar.png", False, WHITE)
 
 # -------- Main Program Loop -----------
 while not done:
@@ -286,6 +316,18 @@ while not done:
 
     screen.blit(background_image,(0, 0))
 
+    pygame.draw.rect(screen, healthColor, [1435, 168, 48, health])
+    screen.blit(health_image, (1435, 20) )
+
+    if (health > 0):
+        healthChange = 0
+    
+
+
+
+
+
+
     # Get the current mouse position. This returns the position
     # as a list of two numbers.
     # Fetch the x and y out of the list,
@@ -307,6 +349,14 @@ while not done:
     # runs for every player-rock collision
     for rock in rock_collisions:
         score += 1
+        health += healthChange 
+
+        if (healthColor[1] < 10) or (healthColor[0] > 250):
+            healthColorChange = 0
+    
+        healthColor[0] += healthColorChange 
+        healthColor[1] -= healthColorChange 
+
         print(score)
 
     # runs for every floor-rock collision
@@ -324,7 +374,7 @@ while not done:
 
     # Draw all the spites
     all_sprites_list.draw(screen)
-
+    #healthG.draw(screen)
     # Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
 
