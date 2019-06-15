@@ -112,9 +112,9 @@ class player(pygame.sprite.Sprite):
 
         super().__init__()
 
-        #self.image = load_image("baljeet.png")
-        self.image = pygame.Surface([width, height])
-        self.image.fill(color)
+        self.image = load_image("player.png", False, WHITE)
+        #self.image = pygame.Surface([width, height])
+        #self.image.fill(color)
 
         self.rect = self.image.get_rect()
 
@@ -125,9 +125,9 @@ class player(pygame.sprite.Sprite):
     # subprogram to keep the player on the screen
     def collision(self):
 
-        if (self.rect.y > 920):
+        if (self.rect.y > 820):
             self.speed2 = 0
-            self.rect.y = 920
+            self.rect.y = 820
         if (self.rect.x >= 1470):
             self.speed1 = 0
             self.rect.x = 1470
