@@ -146,6 +146,15 @@ class player(pygame.sprite.Sprite):
             self.rect.y = 5
 
 
+class life(pygame.sprite.Sprite):
+
+    def __init__(self):
+
+        super().__init__()
+
+        self.image = oof
+
+
 # Initialize Pygame
 pygame.init()
 
@@ -215,9 +224,18 @@ initial_rock = True
 # used for changing colors
 colorFlip = 1
 
-# loads the background image 
-background_image = load_image("background2.png", False, WHITE)
-background_image = pygame.transform.scale(background_image, (1500, 1000))
+
+graphics = 2
+
+if (graphics == 1):
+    background_image = load_image("background1.png", True, WHITE)
+    background_image = pygame.transform.scale(background_image, (1500, 1000))
+
+elif (graphics == 2):
+    # loads the background image 
+    background_image = load_image("background2.png", False, WHITE)
+    background_image = pygame.transform.scale(background_image, (1500, 1000))
+
 
 
 # -------- Main Program Loop -----------
@@ -255,18 +273,18 @@ while not done:
             jump = False
             jumpcount = high
 
-    # used to make the lava in the background image change color
-    pygame.draw.rect(screen, lavaColor, [650, 120, 350, 300])
+    
+    if (graphics == 2):
+        # used to make the lava in the background image change color
+        pygame.draw.rect(screen, lavaColor, [650, 120, 350, 300])
 
-    if (lavaColor[1] > 200):
-        colorFlip *= -1
-    elif (lavaColor[1] < 1):
-        colorFlip *= -1
-    lavaColor[1] += colorFlip
+        if (lavaColor[1] > 200):
+            colorFlip *= -1
+        elif (lavaColor[1] < 1):
+            colorFlip *= -1
+        lavaColor[1] += colorFlip
 
     screen.blit(background_image,(0, 0))
-
-
 
     # Get the current mouse position. This returns the position
     # as a list of two numbers.
