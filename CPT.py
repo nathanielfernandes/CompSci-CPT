@@ -270,6 +270,7 @@ health_image = load_image("health_bar.png", False, WHITE)
 
 # -------- Main Program Loop -----------
 while not done:
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
@@ -322,12 +323,6 @@ while not done:
     if (health > 0):
         healthChange = 0
     
-
-
-
-
-
-
     # Get the current mouse position. This returns the position
     # as a list of two numbers.
     # Fetch the x and y out of the list,
@@ -348,7 +343,9 @@ while not done:
 
     # runs for every player-rock collision
     for rock in rock_collisions:
-        score += 1
+
+        score -= 1
+
         health += healthChange 
 
         if (healthColor[1] < 10) or (healthColor[0] > 250):
@@ -357,12 +354,12 @@ while not done:
         healthColor[0] += healthColorChange 
         healthColor[1] -= healthColorChange 
 
-        print(score)
 
     # runs for every floor-rock collision
     for rock in rock_floor:
         createRock(rock_speed)
         rock_speed += 0.02
+        score += 5
 
     # calls the update function of each rock
     for rock in rock_list:
@@ -371,6 +368,8 @@ while not done:
     # calls the gravity and collision for player1
     player1.gravity()
     player1.collision()
+
+    print(score)
 
     # Draw all the spites
     all_sprites_list.draw(screen)
