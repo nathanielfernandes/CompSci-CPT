@@ -403,7 +403,6 @@ while playAgain:
             player1.gravity()
             player1.collision()
 
-            print(score)
         
             healthMsg = load_text("HEALTH", "franklingothicdemicond", 45, healthColor)
             screen.blit(healthMsg,(1355, 45))
@@ -435,6 +434,7 @@ while playAgain:
 
                 screen.blit(end_image, (0, 0))
 
+                print(score)
                 done = True
 
         # Go ahead and update the screen with what we've drawn.
