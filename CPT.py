@@ -208,7 +208,6 @@ while playAgain:
 
     all_sprites_list.add(floor)
 
-
     # subprogram which creates a rock when called
     def createRock(speed):
 
@@ -257,10 +256,8 @@ while playAgain:
     # used to create the first set of rocks
     initial_rock = True
 
-
     # used for changing colors
     colorFlip = 1
-
 
     # value changes the type of background
     graphics = 1
@@ -305,9 +302,7 @@ while playAgain:
         # gets the user key inputs
         keys = pygame.key.get_pressed()
 
-
         # player movement
-
         # lateral movement
         if keys[pygame.K_a]:
             player1.rect.x -= player1.speed
@@ -348,11 +343,6 @@ while playAgain:
                 lavaColor[1] += colorFlip
 
             screen.blit(background_image,(0, 0))
-            # Get the current mouse position. This returns the position
-            # as a list of two numbers.
-            # Fetch the x and y out of the list,
-            # just like we'd fetch letters out of a string.
-            # Set the player object to the mouse location
 
             # creates the first set of rocks when the game begins
             if initial_rock:
@@ -373,7 +363,6 @@ while playAgain:
             for fruit in fruit_playerCollision:
 
                 score += 250
-
                 health -= 50
 
                 if (healthColor[0] > 50) or (healthColor[1] < 205):
@@ -393,21 +382,15 @@ while playAgain:
                 healthColor[0] += healthColorChange 
                 healthColor[1] -= healthColorChange 
 
-
-                    
-
-
-
             # runs for every floor-rock collision
             for rock in rock_floorCollision:
                 createRock(rock_speed)
                 rock_speed += 0.02
                 score += 5
 
-                lucky = random.randrange(0, 20)
+                lucky = random.randrange(0, 30)
                 if (lucky < 1):
                     createFruit()
-
 
             # calls the update function of each rock
             for rock in rock_list:
@@ -430,17 +413,15 @@ while playAgain:
             score_num = load_text(str(score), "franklingothicdemicond", 45, BLACK)
             screen.blit(score_num,(140, 45))
 
-
             # Draw all the spites
             all_sprites_list.draw(screen)
 
             pygame.draw.rect(screen, healthColor, [1400, 246, 48, health])
             screen.blit(health_image, (1400, 100) )
         
-        
-
             if (health < -144):
                 health = -144
+
             # if the player dies
             elif (health > 0):
                 healthChange = 0
@@ -455,8 +436,6 @@ while playAgain:
                 screen.blit(end_image, (0, 0))
 
                 done = True
-
-
 
         # Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
