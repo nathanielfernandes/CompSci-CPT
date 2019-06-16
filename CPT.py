@@ -1,13 +1,13 @@
-# This program is a choose your own adventure game
+# "Grumpy Volcano"
 # @course ICS3UC
 # date 2019/05/31
-# @author Henushan Balachandran & Nathaniel Fernandes
+# @authors: Henushan Balachandran & Nathaniel Fernandes
 
 import pygame
 import random
 
+# allows the game to be restarted
 playAgain = True
-
 while playAgain:
     # Define some colors
     R_1 = (237, 59, 68)
@@ -44,7 +44,8 @@ while playAgain:
         return image
 
 
-
+    # subprogram to simply the process of using text
+    # inspiration from the "load_image" sub-program
     def load_text(message, fontName, size, color):
 
         font = pygame.font.SysFont(fontName, size)
@@ -105,7 +106,6 @@ while playAgain:
         def update(self):
 
             self.rect.y += self.speed
-
             # make sure the color stays within the right range
             if (self.color[1] > 200):
                 self.flip *= -1
@@ -114,7 +114,32 @@ while playAgain:
 
             self.color[1] += self.flip
             self.image.fill(self.color)
-        
+
+
+    # falling fruits sprite
+    class falling_fruit(pygame.sprite.Sprite):
+
+        def __init__(self, speed):
+
+            super().__init__()
+
+            self.speed = speed
+
+            self.fruits = []
+            self.fruits.append(load_image("watermelon.png", False, WHITE))
+            self.fruits.append(load_image("cherry.png", False, WHITE))
+            self.fruits.append(load_image("strawberry.png", False, WHITE))
+            self.fruits.append(load_image("banana.png", False, WHITE))
+
+            self.randomFruit = random.randint(0, 3)
+
+            self.image = self.fruits[self.randomFruit]
+            self.rect = self.image.get_rect()
+
+        def update(self):
+            self.rect.y += self.speed
+
+
 
     # player sprite
     class player(pygame.sprite.Sprite):
@@ -157,22 +182,6 @@ while playAgain:
                 self.speed2 = self.speed2 * -0.5
                 self.rect.y = 5
 
-
-    # class health_bar(pygame.sprite.Sprite):
-
-    #     def __init__(self):
-
-    #         super().__init__()
-    #         self.width = 48
-    #         self.height = 148
-    #         self.color = [255, 0, 0]
-    #         #load_iamge("health_bar.png", False, WHITE)
-    #         self.image = pygame.Surface([self.width, self.height])
-    #         self.image.fill(self.color)
-            
-    #         self.rect = self.image.get_rect()
-
-
     # Initialize Pygame
     pygame.init()
 
@@ -181,11 +190,12 @@ while playAgain:
 
     # creates the screen
     screen = pygame.display.set_mode(size)
-    pygame.display.set_caption("Scene Demo")
+    pygame.display.set_caption("Grumpy Volcano")
     # This is a list of 'sprites.' Each object in the program is
     # added to this list. The list is managed by a class called 'Group.'
     rock_list = pygame.sprite.Group()
     player_list = pygame.sprite.Group()
+    fruit_list = pygame.sprite.Group()
 
     # This is a list of every sprite.
     # All rocks and the player block as well.
@@ -199,21 +209,6 @@ while playAgain:
     all_sprites_list.add(floor)
 
 
-
-
-
-    # health = health_bar()
-    # health.rect.x = 1435
-    # health.rect.y = 20
-
-    # healthG = pygame.sprite.Group()
-    # healthG.add(health)
-
-
-
-
-    rock_speed = 5
-
     # subprogram which creates a rock when called
     def createRock(speed):
 
@@ -224,6 +219,7 @@ while playAgain:
         rock_list.add(rock)
         all_sprites_list.add(rock)
 
+    rock_speed = 5
 
     # creates the player sprite
     player1 = player(R_1, 40, 60, 14)
@@ -233,11 +229,16 @@ while playAgain:
     player_list.add(player1)
     all_sprites_list.add(player1)
 
+    # creates the fruit sprite
+    def createFruit():
 
+        fruit = falling_fruit(5)
 
+        fruit.rect.x = random.randrange(0, size[0])
+        fruit.rect.y = random.randrange(-1*size[1], 0)
 
-
-
+        fruit_list.add(fruit)
+        all_sprites_list.add(fruit)
 
     # Loop until the user clicks the close button.
     done = False
@@ -261,6 +262,7 @@ while playAgain:
     colorFlip = 1
 
 
+    # value changes the type of background
     graphics = 1
 
     if (graphics == 1):
@@ -273,22 +275,26 @@ while playAgain:
         background_image = pygame.transform.scale(background_image, (1500, 1000))
 
 
-
+    # used to create the health bar
     health = -144
     healthColor = [0, 255, 0]
     healthChange = 5
     healthColorChange = 10
     health_image = load_image("health_bar.png", False, WHITE)
 
+    # image you see before the game starts
     start_image = load_image("start_screen.png", False, WHITE)
+    end_image = load_image("end_screen.png", False, WHITE)
 
+    # boolean for whether the game has started
     started = False
 
-
+    # text loaded in to be blitted
     score_text = load_text("SCORE: ", "franklingothicdemicond", 45, BLACK)
-    
 
-    # -------- Main Program Loop -----------d
+    #end_text = load_text()
+
+    # -------- Main Program Loop -----------
     while not done:
         
         for event in pygame.event.get():
@@ -355,13 +361,27 @@ while playAgain:
                     initial_rock = False
 
             # See if the player has collided with any rock.
-            rock_collisions = pygame.sprite.spritecollide(player1, rock_list, False)
+            rock_playerCollision = pygame.sprite.spritecollide(player1, rock_list, False)
 
             # See if any rocks have collided with the floor.
-            rock_floor = pygame.sprite.spritecollide(floor, rock_list, True)
+            rock_floorCollision = pygame.sprite.spritecollide(floor, rock_list, True)
+
+            fruit_floorCollision = pygame.sprite.spritecollide(floor, fruit_list, True)
+
+            fruit_playerCollision = pygame.sprite.spritecollide(player1, fruit_list, True)
+
+            for fruit in fruit_playerCollision:
+
+                score += 250
+
+                health -= 50
+
+                if (healthColor[0] > 50) or (healthColor[1] < 205):
+                    healthColor[1] += 50
+                    healthColor[0] -= 50
 
             # runs for every player-rock collision
-            for rock in rock_collisions:
+            for rock in rock_playerCollision:
 
                 score -= 1
 
@@ -373,43 +393,40 @@ while playAgain:
                 healthColor[0] += healthColorChange 
                 healthColor[1] -= healthColorChange 
 
-                if (health > 0):
-                    healthChange = 0
-                    started = False
-                    done = True
+
                     
 
 
 
             # runs for every floor-rock collision
-            for rock in rock_floor:
+            for rock in rock_floorCollision:
                 createRock(rock_speed)
                 rock_speed += 0.02
                 score += 5
 
+                lucky = random.randrange(0, 20)
+                if (lucky < 1):
+                    createFruit()
+
+
             # calls the update function of each rock
             for rock in rock_list:
                 rock.update()
+
+            for fruit in fruit_list:
+                fruit.update()
 
             # calls the gravity and collision for player1
             player1.gravity()
             player1.collision()
 
             print(score)
-
-
-            # font = pygame.font.SysFont("franklingothicdemicond", 45)
-            # healthMsg = font.render("HEALTH", True, healthColor)
-            # 
-
         
             healthMsg = load_text("HEALTH", "franklingothicdemicond", 45, healthColor)
             screen.blit(healthMsg,(1355, 45))
 
-
-
             screen.blit(score_text, (5, 45))
-
+            
             score_num = load_text(str(score), "franklingothicdemicond", 45, BLACK)
             screen.blit(score_num,(140, 45))
 
@@ -419,13 +436,32 @@ while playAgain:
 
             pygame.draw.rect(screen, healthColor, [1400, 246, 48, health])
             screen.blit(health_image, (1400, 100) )
+        
+        
+
+            if (health < -144):
+                health = -144
+            # if the player dies
+            elif (health > 0):
+                healthChange = 0
+                started = False
+
+                score_text = load_text("SCORE: ", "franklingothicdemicond", 300, BLACK)
+                screen.blit(score_text, (25, 250))
+
+                score_num = load_text(str(score), "franklingothicdemicond", 300, BLACK)
+                screen.blit(score_num,(900, 250))
+
+                screen.blit(end_image, (0, 0))
+
+                done = True
+
 
 
         # Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
 
         # Limit to 60 frames per second
-
         clock.tick(60)
 
     end = True
@@ -437,12 +473,7 @@ while playAgain:
                 done = True
                 
             elif (event.type == pygame.KEYDOWN):
-                
-                if (event.key == pygame.K_SPACE):
-                    end = False
-                    playAgain = True
-                else:
-                    end = False
-                    playAgain = False
-                    done = True
+                end = False
+                playAgain = True
+            
 pygame.quit()
