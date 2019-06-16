@@ -9,6 +9,7 @@ import random
 # allows the game to be restarted
 playAgain = True
 while playAgain:
+    
     # Define some colors
     R_1 = (237, 59, 68)
     R_2 = (252, 95, 95)
@@ -54,6 +55,8 @@ while playAgain:
         return msg
 
 
+
+
     # This sprite acts as the ground for the falling lava, used to check collisions
     class floor_rock(pygame.sprite.Sprite):
 
@@ -69,6 +72,9 @@ while playAgain:
 
             # Fetch the rectangle object that has the dimensions of the image
             self.rect = self.image.get_rect()
+
+
+
 
 
     # falling rocks sprite
@@ -116,6 +122,10 @@ while playAgain:
             self.image.fill(self.color)
 
 
+
+
+
+
     # falling fruits sprite
     class falling_fruit(pygame.sprite.Sprite):
 
@@ -138,6 +148,9 @@ while playAgain:
 
         def update(self):
             self.rect.y += self.speed
+
+
+
 
 
 
@@ -174,13 +187,13 @@ while playAgain:
 
         # supprgram that simulates a constant gravity on the player
         def gravity(self):
-
-            self.speed2 += 2
             self.rect.y += self.speed
-
-            if (self.rect.y <= 0):
-                self.speed2 = self.speed2 * -0.5
-                self.rect.y = 5
+            
+            
+            
+            
+            
+            
 
     # Initialize Pygame
     pygame.init()
@@ -232,7 +245,6 @@ while playAgain:
     def createFruit():
 
         fruit = falling_fruit(5)
-
         fruit.rect.x = random.randrange(0, size[0])
         fruit.rect.y = random.randrange(-1*size[1], 0)
 
@@ -247,7 +259,7 @@ while playAgain:
 
     score = 0
 
-    # this is not our code, we got it from ()
+    # this is not our code, we got it from (https://www.youtube.com/watch?v=2-DNswzCkqk)
     # variables used for allowing the player to jump
     jump = False
     high = 15
@@ -289,8 +301,6 @@ while playAgain:
     # text loaded in to be blitted
     score_text = load_text("SCORE: ", "franklingothicdemicond", 45, BLACK)
 
-    #end_text = load_text()
-
     # -------- Main Program Loop -----------
     while not done:
         
@@ -310,7 +320,8 @@ while playAgain:
         if keys[pygame.K_d]:
             player1.rect.x += player1.speed
 
-        # this is not our code, we got it from ()
+
+        # this is not our code, we got it from (https://www.youtube.com/watch?v=2-DNswzCkqk)
         # allows the player to jump
         if not (jump):
             if keys[pygame.K_w] or keys[pygame.K_SPACE]:
@@ -420,20 +431,22 @@ while playAgain:
         
             if (health < -144):
                 health = -144
+                healthColor[0] = 0
+                healthColor[1] = 255
 
             # if the player dies
             elif (health > 0):
+                
                 healthChange = 0
                 started = False
 
+                screen.blit(end_image, (0, 0))
                 score_text = load_text("SCORE: ", "franklingothicdemicond", 300, BLACK)
                 screen.blit(score_text, (25, 250))
 
                 score_num = load_text(str(score), "franklingothicdemicond", 300, BLACK)
                 screen.blit(score_num,(900, 250))
-
-                screen.blit(end_image, (0, 0))
-
+                
                 print(score)
                 done = True
 
@@ -452,6 +465,7 @@ while playAgain:
                 done = True
                 
             elif (event.type == pygame.KEYDOWN):
+                
                 end = False
                 playAgain = True
             
